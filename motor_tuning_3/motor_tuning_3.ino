@@ -1,14 +1,4 @@
-/*
-
-Differential Drive Motor PID Controller
-
-*/
-
-
-//======================================================
-// Motor Pins
-//======================================================
-
+ // Motor Pins
 #define ENA 11
 #define IN1 7
 #define IN2 8
@@ -17,50 +7,30 @@ Differential Drive Motor PID Controller
 #define IN3 4
 #define IN4 5
 
-
-//======================================================
-// Encoder Pins
-//======================================================
-
+ // Encoder Pins
 #define LEFT_ENC_A 2
 #define LEFT_ENC_B 3
 
 #define RIGHT_ENC_A 9
 #define RIGHT_ENC_B 10
 
-
-//======================================================
-// Encoder Constants
-//======================================================
-
+ // Encoder Constants
 const float COUNTS_PER_REV = 896.0;
 
-
-//======================================================
-// Encoder Variables
-//======================================================
-
+ // Encoder Variables
 volatile long leftCount = 0;
 volatile long rightCount = 0;
 
 long prevLeftCount = 0;
 long prevRightCount = 0;
 
-
-//======================================================
-// RPM Variables
-//======================================================
-
+ // RPM Variables
 float leftRPM = 0.0;
 float rightRPM = 0.0;
 
 float targetRPM = 0.0;
 
-
-//======================================================
-// PID Gains
-//======================================================
-
+ // PID Gains
 float leftKp = 0.80;
 float leftKi = 0.00;
 float leftKd = 0.00;
@@ -69,48 +39,27 @@ float rightKp = 0.80;
 float rightKi = 0.00;
 float rightKd = 0.00;
 
-
-//======================================================
-// Left PID Variables
-//======================================================
-
+ // Left PID Variables
 float leftError = 0;
 float leftPrevError = 0;
 float leftIntegral = 0;
 float leftDerivative = 0;
 
-
-//======================================================
-// Right PID Variables
-//======================================================
-
+ // Right PID Variables
 float rightError = 0;
 float rightPrevError = 0;
 float rightIntegral = 0;
 float rightDerivative = 0;
 
-
-//======================================================
-// PWM Variables
-//======================================================
-
+ // PWM Variables
 int leftPWM = 0;
 int rightPWM = 0;
 
-
-//======================================================
-// Timing
-//======================================================
-
+ // Timing
 unsigned long previousTime = 0;
-
 const int sampleTime = 50;
 
-
-//======================================================
-// Left Encoder Interrupt
-//======================================================
-
+ // Left Encoder Interrupt
 void leftEncoderISR() {
   if (digitalRead(LEFT_ENC_A) == digitalRead(LEFT_ENC_B))
     leftCount++;
@@ -118,11 +67,7 @@ void leftEncoderISR() {
     leftCount--;
 }
 
-
-//======================================================
-// Right Encoder Interrupt
-//======================================================
-
+ // Right Encoder Interrupt
 void rightEncoderISR() {
   if (digitalRead(RIGHT_ENC_A) == digitalRead(RIGHT_ENC_B))
     rightCount--;
@@ -130,11 +75,7 @@ void rightEncoderISR() {
     rightCount++;
 }
 
-
-//======================================================
-// Setup
-//======================================================
-
+ // Setup
 void setup() {
 
   Serial.begin(115200);
@@ -165,28 +106,21 @@ void setup() {
     rightEncoderISR,
     CHANGE);
 
-
   // Forward Direction
-
   digitalWrite(IN1, LOW);
   digitalWrite(IN2, HIGH);
 
   digitalWrite(IN3, HIGH);
   digitalWrite(IN4, LOW);
 
-
   analogWrite(ENA, 0);
   analogWrite(ENB, 0);
-
 
   previousTime = millis();
 
   Serial.println("# PID Controller Ready");
 }
-//======================================================
-// Read Serial Commands
-//======================================================
-
+ // Read Serial Commands
 void readSerial() {
   if (!Serial.available())
     return;
@@ -255,17 +189,11 @@ void readSerial() {
   }
 }
 
-
-
-//======================================================
-// Calculate Wheel RPM
-//======================================================
-
+ // Calculate Wheel RPM
 void calculateRPM(float dt) {
 
   long currentLeft;
   long currentRight;
-
 
   noInterrupts();
 
@@ -274,29 +202,20 @@ void calculateRPM(float dt) {
 
   interrupts();
 
-
   long deltaLeft = currentLeft - prevLeftCount;
   long deltaRight = currentRight - prevRightCount;
-
 
   prevLeftCount = currentLeft;
   prevRightCount = currentRight;
 
-
   leftRPM =
     (deltaLeft * 60.0) / (COUNTS_PER_REV * dt);
-
 
   rightRPM =
     (deltaRight * 60.0) / (COUNTS_PER_REV * dt);
 }
 
-
-
-//======================================================
-// Apply PWM To Motors
-//======================================================
-
+ // Apply PWM To Motors
 void driveMotors() {
 
   analogWrite(ENA, leftPWM);
@@ -304,10 +223,7 @@ void driveMotors() {
   analogWrite(ENB, rightPWM);
 }
 
-//======================================================
-// Left PID Controller
-//======================================================
-
+ // Left PID Controller
 void leftPID(float dt) {
 
   leftError = targetRPM - leftRPM;
@@ -328,10 +244,7 @@ void leftPID(float dt) {
 }
 
 
-//======================================================
-// Right PID Controller
-//======================================================
-
+ // Right PID Controller
 void rightPID(float dt) {
 
   rightError = targetRPM - rightRPM;
@@ -352,10 +265,7 @@ void rightPID(float dt) {
 }
 
 
-//======================================================
-// Reset PID
-//======================================================
-
+ // Reset PID
 void resetPID() {
 
   leftIntegral = 0;
@@ -369,10 +279,7 @@ void resetPID() {
 }
 
 
-//======================================================
-// Send Telemetry
-//======================================================
-
+ // Send Telemetry
 void sendTelemetry()
 {
     Serial.print("DATA,");
@@ -408,10 +315,8 @@ void sendTelemetry()
     Serial.println(rightCount);
 }
 
-//======================================================
-// Main Loop
-//======================================================
-
+ // Main Loop
+ 
 void loop() {
 
   // Read commands from PC
