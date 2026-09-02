@@ -1,0 +1,9 @@
+{
+    "left_kp": 2.3,
+    "left_ki": 1.7,
+    "left_kd": 0.0,
+    "right_kp": 2.2,
+    "right_ki": 1.7,
+    "right_kd": 0.0,
+    "target_rpm": 30
+}
