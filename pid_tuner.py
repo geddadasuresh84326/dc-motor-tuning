@@ -60,9 +60,7 @@ class PIDTuner(QWidget):
         self.resize(1300,900)
 
 
-        # -----------------------
         # COM Port Selection
-        # -----------------------
 
         self.port_label = QLabel("COM Port")
 
@@ -81,9 +79,7 @@ class PIDTuner(QWidget):
         self.reset_button = QPushButton("Reset Graph")
 
         self.reset_button.clicked.connect(self.resetGraph)  
-        # -----------------------
         # Top Layout
-        # -----------------------
 
         top_layout = QHBoxLayout()
 
@@ -96,10 +92,8 @@ class PIDTuner(QWidget):
         top_layout.addWidget(self.status_label)
 
 
-        # -----------------------
-        # Main Layout
-        # -----------------------
-
+         # Main Layout
+ 
         main_layout = QVBoxLayout()
 
         main_layout.addLayout(top_layout)
@@ -141,10 +135,8 @@ class PIDTuner(QWidget):
 
     def createPIDControls(self, layout):
 
-        # ==========================
-        # LEFT MOTOR
-        # ==========================
-
+         # LEFT MOTOR
+ 
         layout.addWidget(QLabel("LEFT MOTOR"))
 
         self.left_kp_label = QLabel("Left Kp : 0.80")
@@ -201,10 +193,8 @@ class PIDTuner(QWidget):
         layout.addWidget(self.left_kd_spin)
 
 
-        # ==========================
-        # RIGHT MOTOR
-        # ==========================
-
+         # RIGHT MOTOR
+ 
         layout.addWidget(QLabel("RIGHT MOTOR"))
 
         self.right_kp_label = QLabel("Right Kp : 0.80")
@@ -260,10 +250,8 @@ class PIDTuner(QWidget):
         layout.addWidget(self.right_kd_spin)
 
 
-        # ==========================
-        # Target RPM
-        # ==========================
-
+         # Target RPM
+ 
         self.rpm_label = QLabel("Target RPM : 0")
 
         self.rpm_slider = QSlider(Qt.Horizontal)
@@ -276,10 +264,8 @@ class PIDTuner(QWidget):
         layout.addWidget(self.rpm_slider)
 
 
-        # ==========================
-        # Live Values
-        # ==========================
-
+         # Live Values
+ 
         self.targetValue = QLabel("Target RPM : 0")
         self.leftRPMValue = QLabel("Left RPM : 0")
         self.rightRPMValue = QLabel("Right RPM : 0")
@@ -362,10 +348,8 @@ class PIDTuner(QWidget):
     
     def connectArduino(self):
 
-        # ==========================
-        # Disconnect
-        # ==========================
-        if self.serial_port is not None:
+         # Disconnect
+         if self.serial_port is not None:
 
             self.running = False
 
@@ -381,10 +365,8 @@ class PIDTuner(QWidget):
 
             return
 
-        # ==========================
-        # Connect
-        # ==========================
-        try:
+         # Connect
+         try:
 
             self.serial_port = serial.Serial(
                 self.port_combo.currentText(),
